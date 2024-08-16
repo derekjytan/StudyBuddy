@@ -1,13 +1,43 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import axios from '../api/axios';
 
-export default function Navbar() {
+export default async function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [user, setUser] = useState('');
+    const [loggedIn, setLoggedIn] = useState(false);
 
+    const checkSession = async() => {
+        try {
+            const session = await axios.get('/api/session');
+            console.log("Sesh: ", session);
+            if(!session.data.data) {
+                setLoggedIn(false)
+            }
+        } catch(error) {
+            console.log("ERR: ", error)
+        }
+        
+    };
+
+    checkSession();
+    
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
+    };
+
+    const handleLogout = async () => {
+        try {
+            const response = await axios.get('/api/auth/logout');
+            console.log(JSON.stringify(response))
+            if (response.status === 200) {
+                console.log('logout success')
+            }
+        } catch (error) {
+            console.error('Logout error:', error);
+        }
     };
 
     return (
@@ -16,7 +46,18 @@ export default function Navbar() {
                 <div className="text-white text-2xl font-bold">
                     <Link href="/">StudyBuddy</Link>
                 </div>
+
+                {loggedIn ? (
                 <div className="hidden md:flex space-x-6">
+                    <button onClick={handleLogout} className="text-white hover:text-gray-300">
+                        Logout
+                    </button>
+                    <h1 href="/login" className="text-white hover:text-gray-300">
+                        User Filler
+                    </h1>
+                </div>
+                ) : (
+                    <div className="hidden md:flex space-x-6">
                     <Link href="/" className="text-white hover:text-gray-300">
                         Home
                     </Link>
@@ -30,6 +71,8 @@ export default function Navbar() {
                         Sign Up
                     </Link>
                 </div>
+                )}
+                
                 <div className="md:hidden">
                     <button
                         onClick={toggleMenu}

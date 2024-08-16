@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from '../api/axios';
 import { useRouter } from 'next/navigation';
 
 export default function RegisterPage() {
@@ -11,9 +11,18 @@ export default function RegisterPage() {
     const [error, setError] = useState('');
     const router = useRouter();
 
-    const handleSignup = async () => {
+    const handleSignup = async (e) => {
+        e.preventDefault();
+
         try {
-            const response = await axios.post('/api/auth/register', { username, email, password });
+            const response = await axios.post('/api/auth/register', 
+                JSON.stringify({ username, email, password }), 
+                {
+                    headers: { 'Content-Type': 'application/json' },
+                    withCredentials: true
+                }
+            );
+
             if (response.status === 201) {
                 router.push('/'); // Redirect to the home page after successful signup
             }

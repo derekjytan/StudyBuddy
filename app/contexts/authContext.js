@@ -1,22 +1,28 @@
 'use client'
 
 import React, { useEffect, useState, useContext, createContext } from 'react'
-import axios from 'axios'
+import axios from '../api/axios'
 
-const AuthContext = createContext();
+const AuthContext = createContext({});
 
 export const useAuth = () => {
     return useContext(AuthContext);
 }
 
-const AuthProvider = ({ children }) => {
+export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [auth, setAuth] = useState();
 
     const fetchData = async () => {
+
         try {
-            const response = await axios.get('/api/user');
+            const response = await axios.get('/api/user', {
+                // headers: {
+                //     Authorization: `Bearer ${token}`
+                // }
+            });
             if (response.data && response.data.username) {
                 setUser(response.data.username);
                 console.log(response.data.username);
@@ -38,10 +44,12 @@ const AuthProvider = ({ children }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ user, setUser, fetchData, loading, error }}>
-            {!loading ? (children) : null}
+        // <AuthContext.Provider value={{ auth, setAuth, fetchData, loading, error }}>
+        <AuthContext.Provider value={{auth, setAuth}}>
+            {/* {!loading ? (children) : null} */}
+            {children}
         </AuthContext.Provider>
     )
 }
 
-export default AuthProvider;
+export default AuthContext;

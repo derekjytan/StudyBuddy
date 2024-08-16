@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import Navbar from './components/navbar';
+import Users from './components/Users';
 
 export default function ChatPage() {
     const [messages, setMessages] = useState([]);
@@ -41,6 +42,7 @@ export default function ChatPage() {
     return (
         <div className="flex flex-col h-screen">
             <Navbar />
+            {/* <Users /> */}
             <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-4">
                 {messages.map((message, index) => (
                     <div

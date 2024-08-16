@@ -2,10 +2,11 @@ import User from "@/models/User";
 import connectDB from "@/lib/mongo";
 import { jwtVerify } from "jose";
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 export async function getUserData(req) {
     const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-    const token = req.cookies.get('token')?.value || '';
+    const token = cookies().get('token')?.value || '';
     console.log("Received JWT Token:", token); // Log the token for inspection
     try {
         const { payload } = await jwtVerify(token, secret);

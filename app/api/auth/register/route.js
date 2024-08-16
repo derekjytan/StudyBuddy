@@ -7,17 +7,16 @@ export async function POST(req) {
     console.log('Register route hit');
     // Call our database
     await connectDB();
-    // Coming from the frontend
-    const { username, email, password } = await req.json();
-    
-    console.log('Received:', { username, email, password });
 
     try {
+        // Coming from the frontend
+        const { username, email, password } = await req.json();
+        console.log('Received:', { username, email, password });
         // Ensure the email and password are inputted
         if (!username || !email || !password) {
             return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
         }
-
+        
         // Email validation using regex
         // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         // if (!emailRegex.test(email)) {

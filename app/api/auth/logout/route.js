@@ -1,12 +1,9 @@
-import { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+import { cookies } from 'next/headers'
 
 export async function GET() {
-    const response = NextRequest.json({ message: 'Logout successful' }, { status: 200 });
+    const response = NextResponse.json({ message: 'Logout successful' }, { status: 200 });
     // Deleting the token from the browser
-    response.cookies.delete('token', {
-        path: '/',
-        httpOnly: true,
-        secure: false
-    });
+    cookies().set('session', '', {expires: new Date(0)})
     return response;
 }
